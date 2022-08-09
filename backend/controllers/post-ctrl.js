@@ -14,7 +14,7 @@ exports.getOnePost = (req, res, next) => {
 
 //Récupération des posts
 exports.getAllPost = (req, res, next) => {
-    Post.find()
+    Post.find().sort({_id: -1})
         .then(posts => res.status(200).json(posts))
         .catch(error => {
             console.log(error);
