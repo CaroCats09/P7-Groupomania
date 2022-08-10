@@ -13,14 +13,14 @@
                     </div>
                 </div>
 
-                <div v-if="userId === post.UserId || user.isadmin" class="dropdown">
+                <div v-if="userId === post.userId || isadmin" class="dropdown">
                     <a class="btn btn-white" type="button" v-bind:id="'dropdownMenuButton' + post._id" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <i class="fas fa-ellipsis-h ellipsis-icon"></i>
                     </a>
 
                     <ul class="dropdown-menu dropdown-menu-right"  v-bind:aria-labelledby="'dropdownMenuButton' + post._id">
-                        <li ><button v-if="userId === post.UserId" class="dropdown-item" @click="editPost(post._id)">Modifier</button></li>
+                        <li ><button v-if="userId === post.userId" class="dropdown-item" @click="editPost(post._id)">Modifier</button></li>
                         <li><button class="dropdown-item dropdown-item-delete" @click="deletePost(post._id)">Supprimer</button></li>
                     </ul>
                 </div>
@@ -89,6 +89,8 @@
         data() {
             return {
                 postId: null,
+                userId: localStorage.getItem('userId'),
+                isadmin: localStorage.getItem('isadmin'),
                 messageEdit: this.$props.post.content,
                 selectedFileEdit: null,
                 previewImageEdit: this.$props.post.imageUrl,
