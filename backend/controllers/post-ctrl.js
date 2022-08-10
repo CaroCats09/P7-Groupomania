@@ -135,6 +135,22 @@ exports.likeOrDislike = (req, res) => {
     id_user = req.body.userId;
     switch (like) {
         case -1:
+            
+            //chercher le post
+            Post.findOne({ _id: id_post }).then((post) => {
+                
+                // S'il dislike pas 
+                // => j'elimine le dislike
+                if (post.usersDisliked.includes(id_user)) {
+                    Post.updateOne({ _id: id_post }, {
+                        $pull: { usersDisliked: id_user }, $inc: { dislikes: -1 }
+                    }).then(() =>
+                        res.status(200).json({ message: "Neutre !" }))
+                        .catch((error) => res.status(400).json({ message: error.message }));
+
+                }
+                else{
+                    
             // traitement
             // mettre à jour le nombre de dislike du post +1
             // ajouter le user ID dans la liste des userDislike
@@ -143,6 +159,10 @@ exports.likeOrDislike = (req, res) => {
             }).then(() =>
                 res.status(200).json({ message: "Je n'aime pas!" }))
                 .catch((error) => res.status(400).json({ message: error.message }));
+                     }
+                    })
+                        .catch((error) => res.status(400).json({ message: error.message }));
+
             break;
 
         case 0:
@@ -174,6 +194,20 @@ exports.likeOrDislike = (req, res) => {
             break;
 
         case 1:
+            
+            //chercher le post
+            Post.findOne({ _id: id_post }).then((post) => {
+                // verifier si l'utilisateur like 
+                // => eliminer le like
+                if (post.usersLiked.includes(id_user)) {
+                    Post.updateOne({ _id: id_post }, {
+                        $pull: { usersLiked: id_user }, $inc: { likes: -1 }
+                    }).then(() =>
+                        res.status(200).json({ message: "Neutre !" }))
+                        .catch((error) => res.status(400).json({ message: error.message }));
+
+                }
+                else {
             // traitement
             // mettre à jour le nombre de like du post +1
             // ajouter le user ID dans la liste des userlike
@@ -182,6 +216,10 @@ exports.likeOrDislike = (req, res) => {
             }).then(() =>
                 res.status(200).json({ message: "J'aime !" }))
                 .catch((error) => res.status(400).json({ message: error.message }));
+                    }
+            })
+                .catch((error) => res.status(400).json({ message: error.message }));
+
 
             break;
     }
